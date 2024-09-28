@@ -34,14 +34,20 @@ case "$i" in
     INSTALL_PREFIX="${i#*=}"
     shift # past argument=value
     ;;
+    --arch=*)
+    ARCH="${i#*=}"
+    shift # past argument=value
+    ;;
     *)
           # unknown option
     ;;
 esac
 done
 
+echo "Processor Architecture: $ARCH"
+
 # Ensure install prefix exists
-if [! -d "$INSTALL_PREFIX" ]; then
+if [ ! -d "$INSTALL_PREFIX" ]; then
     mkdir -p "$INSTALL_PREFIX"
 fi
 
@@ -56,7 +62,7 @@ PAYLOAD="$OUTDIR/payload"
 SYMBOLS="$OUTDIR/payload.sym"
 
 # Lay out payload
-"$INSTALLER_SRC/layout.sh" --configuration="$CONFIGURATION" || exit 1
+"$INSTALLER_SRC/layout.sh" --configuration="$CONFIGURATION" --arch="$ARCH" || exit 1
 
 if [ $INSTALL_FROM_SOURCE = true ]; then
     echo "Installing to $INSTALL_PREFIX"
